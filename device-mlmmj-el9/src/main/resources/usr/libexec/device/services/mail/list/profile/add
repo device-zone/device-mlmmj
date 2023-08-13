@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+umask 0002
+
+OPTIONS="--add name --hostname name --required --select-base /usr/libexec/device/services/mail/list/profile/subscribe.txt --select subscribe --select-base /usr/libexec/device/services/mail/list/profile/post.txt --select post --select-base /usr/libexec/device/services/mail/list/profile/get.txt --select get"
+
+if [ "$1" == "--" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+  if systemctl is-active --quiet mlmmj-autodiscovery.service; then
+    /usr/bin/sudo /usr/bin/systemctl try-reload-or-restart mlmmj-autodiscovery.service
+  else
+    echo "list will be added on next reboot."
+  fi
+
+elif [ "$1" == "-c" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+fi
+

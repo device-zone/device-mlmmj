@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+umask 0002
+
+OPTIONS="--set name --text name --text prefix --text footer --required --text owner --relation-base /etc/device/services/mail/list/profile --relation-name name --relation-suffix .txt --relation profile"
+
+if [ "$1" == "--" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+  if systemctl is-active --quiet mlmmj-autodiscovery.service; then
+    /usr/bin/sudo /usr/bin/systemctl try-reload-or-restart mlmmj-autodiscovery.service
+  else
+    echo "list will be added on next reboot."
+  fi
+
+elif [ "$1" == "-c" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+fi
+

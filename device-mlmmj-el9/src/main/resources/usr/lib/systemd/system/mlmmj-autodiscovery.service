@@ -1,0 +1,15 @@
+# systemd service for managing all mlmmj autoconfiguration.
+
+[Unit]
+Description=MLMMJ Configuration Autodiscovery
+Before=postfix-autodiscovery.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/libexec/device-autodiscovery/mlmmj
+ExecReload=/bin/bash /usr/libexec/device-autodiscovery/mlmmj
+RemainAfterExit=on
+
+[Install]
+WantedBy=multi-user.target
+

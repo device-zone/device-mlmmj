@@ -1,0 +1,4 @@
+/usr/bin/getent group mlmmj > /dev/null || /usr/sbin/groupadd -r mlmmj
+/usr/bin/getent passwd mlmmj > /dev/null || /usr/sbin/useradd -r -g mlmmj mlmmj -s /sbin/nologin -d /var/spool/mlmmj
+chown -R mlmmj:mlmmj /var/spool/mlmmj
+chmod -R g+w /var/spool/mlmmj

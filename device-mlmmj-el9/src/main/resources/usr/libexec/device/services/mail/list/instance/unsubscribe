@@ -1,0 +1,45 @@
+#!/bin/sh
+  
+set -e
+umask 0002
+
+if [ "$1" == "--" ]; then
+
+  if test $# -eq 5; then
+
+    for line in $(find "/etc/device/services/mail/list/instance" -mindepth 1 -maxdepth 1 -type l)
+    do
+      list=$(head -n 1 ${line}/name.txt)
+
+      if test "$2" = "${list}"; then
+
+        /usr/bin/mlmmj-unsub -L "/var/spool/mlmmj/${list}" -a "$4" 2> /dev/null
+
+        exit 0
+
+      fi
+
+    done
+
+    echo "List '$2' does not exist"
+
+    exit 0
+
+  fi
+
+  echo "Usage: subscribe list-name email@address"
+
+elif [ "$1" == "-c" ]; then
+
+  if test $# -eq 2; then
+
+    for line in $(find "/etc/device/services/mail/list/instance" -mindepth 1 -maxdepth 1 -type l)
+    do
+      list=$(head -n 1 ${line}/name.txt)
+      echo "-$list"
+    done
+  fi
+
+fi
+
+

@@ -1,0 +1,5 @@
+if [ $1 = 0 ]; then
+  /usr/bin/systemctl stop mlmmj-autodiscovery.service
+  /usr/bin/systemctl disable mlmmj-autodiscovery.service
+fi
+

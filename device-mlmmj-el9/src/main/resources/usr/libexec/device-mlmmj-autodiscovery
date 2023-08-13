@@ -1,0 +1,219 @@
+#!/bin/bash
+
+#
+# MLMMJ Autodiscovery
+# ===================
+#
+# This script autogenerates the configuration for an mlmmj server.
+
+set -e
+umask 0022
+
+
+#
+# Create instance that exists
+create_instance() {
+  list="${1}"
+  line="${2}"
+
+  listdir="/var/spool/mlmmj/${list}"
+
+  install -o mlmmj -g mlmmj -m 2770 -d "${listdir}"
+  for DIR in incoming queue queue/discarded archive text subconf unsubconf \
+           bounce control moderation subscribers.d digesters.d requeue \
+           nomailsubs.d
+  do
+    install -o mlmmj -g mlmmj -m 2770 -d "${listdir}/${DIR}"
+  done
+
+  test -f "${listdir}"/index || runuser -u mlmmj -- touch "${listdir}"/index
+
+  ln -s "${listdir}" "${line}/original.d"
+}
+
+
+#
+# Remove instance that exists
+remove_instance() {
+  list="${1}"
+  line="${2}"
+
+  listdir=$(readlink -f "$line/original.d")
+  list=$(basename ${listdir})
+
+  rm -rf "/var/spool/mlmmj/${list}"
+}
+
+
+#
+# Remove instance that exists
+update_instance() {
+  list="${1}"
+  line="${2}"
+
+  # broken profile - deny everything in the list
+  if [ ! -e "$line/profile.d/name.txt" ]; then
+    echo "deny" > "/var/spool/mlmmj/${list}/access"
+    echo "Error: profile does not exist" > error
+    return
+  else
+    rm -f "/var/spool/mlmmj/${list}/access"
+  fi
+  profile=$(head -n 1 "${line}/profile.d/name.txt")
+
+  original=$(readlink -f "$line/original.d")
+  listdir="/var/spool/mlmmj/${list}"
+
+  if test "${original}" != "${listdir}"; then
+    rm -f "$line/original.d"
+    mv "${original}" "${listdir}"
+    ln -s "${listdir}" "${line}/original.d"
+  fi
+
+  cp "${line}/owner.txt" "${listdir}/control/owner"
+  echo "${list}" > "${listdir}/control/listaddress"
+
+  if test -e "$line/prefix.txt"; then
+    cp "${line}/prefix.txt" "${listdir}/control/prefix"
+  else
+    rm -f "${listdir}/control/prefix"
+  fi
+
+  if test -e "$line/footer.txt"; then
+    cp "${line}/footer.txt" "${listdir}/control/footer"
+  else
+    rm -f "${listdir}/control/footer"
+  fi
+
+  if test -e "$line/profile.d/subscribe.txt"; then
+    subscribe=$(head -n 1 "${line}/profile.d/subscribe.txt")
+    if test "${subscribe}" = "open"; then
+      rm -f "${listdir}/control/closedlist"
+      rm -f "${listdir}/control/closedlistsub"
+    elif test "${subscribe}" = "invite-only"; then
+      rm -f "${listdir}/control/closedlist"
+      touch "${listdir}/control/closedlistsub"
+    elif test "${subscribe}" = "closed"; then
+      touch "${listdir}/control/closedlist"
+      rm -f "${listdir}/control/closedlistsub"
+    else
+      rm -f "${listdir}/control/closedlist"
+      rm -f "${listdir}/control/closedlistsub"
+    fi
+  else
+    rm -f "${listdir}/control/closedlist"
+    rm -f "${listdir}/control/closedlistsub"
+  fi
+
+  if test -e "$line/profile.d/post.txt"; then
+    post=$(head -n 1 "${line}/profile.d/post.txt")
+    if test "${post}" = "anybody"; then
+      rm -f "${listdir}/control/subonlypost"
+      rm -f "${listdir}/control/modonlypost"
+    elif test "${post}" = "subscriber-only"; then
+      touch "${listdir}/control/subonlypost"
+      rm -f "${listdir}/control/modonlypost"
+    elif test "${post}" = "moderator-only"; then
+      rm -f "${listdir}/control/subonlypost"
+      touch "${listdir}/control/modonlypost"
+    else
+      rm -f "${listdir}/control/subonlypost"
+      rm -f "${listdir}/control/modonlypost"
+    fi
+  else
+    rm -f "${listdir}/control/subonlypost"
+    rm -f "${listdir}/control/modonlypost"
+  fi
+
+  if test -e "$line/profile.d/get.txt"; then
+    get=$(head -n 1 "${line}/profile.d/get.txt")
+    if test "${get}" = "anybody"; then
+      rm -f "${listdir}/control/noget"
+      rm -f "${listdir}/control/subonlyget"
+    elif test "${get}" = "subscriber-only"; then
+      rm -f "${listdir}/control/noget"
+      touch "${listdir}/control/subonlyget"
+    elif test "${get}" = "nobody"; then
+      touch "${listdir}/control/noget"
+      rm -f "${listdir}/control/subonlyget"
+    else
+      touch "${listdir}/control/noget"
+      rm -f "${listdir}/control/subonlyget"
+    fi
+  else
+    touch "${listdir}/control/noget"
+    rm -f "${listdir}/control/subonlyget"
+  fi
+
+}
+
+
+#
+# Mailing lists
+# -------------
+
+logger -t "${0}" "Notice: Creating / updating / removing lists..."
+
+if [ -d "/etc/device/services/mail/list" ]; then
+
+  for line in $(find "/etc/device/services/mail/list/instance" -mindepth 1 -maxdepth 1 -type l)
+  do
+    if [ ! -e "$line/name.txt" ]; then
+      continue;
+    fi
+    list=$(head -n 1 "${line}/name.txt")
+
+    rm -f "${line}/error"
+
+    target=$(readlink -f "$line")
+
+    # remove old lists
+    if test -f "$line/removed"; then
+
+      logger -t "${0}" "removing list ${list}..."
+
+      remove_instance "${list}" "${line}"
+
+      logger -t "${0}" "removed list ${list}."
+
+      # remove folder
+      rm -f "${target}"/*
+      rmdir "${target}"
+      rm -f "${line}"
+
+      continue
+
+    # add new lists
+    elif test -f "$line/added"; then
+
+      logger -t "${0}" "creating list ${list}..."
+
+      create_instance "${list}" "${line}"
+      update_instance "${list}" "${line}"
+
+      logger -t "${0}" "created list ${list}."
+
+      rm -f "$line/added"
+
+    # update lists
+    elif test -f "$line/updated"; then
+
+      update_instance "${list}" "${line}"
+
+      rm -f "$line/updated"
+
+    else
+
+      update_instance "${list}" "${line}"
+
+    fi
+
+  done
+
+fi
+
+
+
+logger -t "${0}" "Notice: MLMMJ autodiscovery complete."
+
+

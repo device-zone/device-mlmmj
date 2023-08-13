@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#
+# Postfix Autodiscovery - MLMMJ
+# =============================
+# 
+# This script autogenerates the mlmmj configuration for a postfix server.
+
+set -e
+umask 0022
+
+myhostname=$(cat /etc/hostname)
+
+#
+# master.cf - mlmmj
+# -----------------
+
+cat >> "master.cf" <<- EOF
+#
+# ====================================================================
+#
+list   unix  -       n       n       -       -       pipe
+  flags=ORhu user=mlmmj:mlmmj argv=/usr/bin/mlmmj-receive -F -L /var/spool/mlmmj/\$user@\$nexthop
+EOF
+
+
