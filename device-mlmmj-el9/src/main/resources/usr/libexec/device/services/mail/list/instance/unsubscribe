@@ -38,6 +38,22 @@ elif [ "$1" == "-c" ]; then
       list=$(head -n 1 ${line}/name.txt)
       echo "-$list"
     done
+
+  elif test $# -eq 4; then
+
+    for line in $(find "/etc/device/services/mail/list/instance" -mindepth 1 -maxdepth 1 -type l)
+    do
+      list=$(head -n 1 ${line}/name.txt)
+
+      if test "$2" = "${list}"; then
+
+        for email in $(/usr/bin/mlmmj-list -L /var/spool/mlmmj/${list}/)
+        do
+          echo "-${email}"
+        done
+      fi
+    done
+
   fi
 
 fi
