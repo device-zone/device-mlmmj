@@ -172,6 +172,21 @@
               <groupname>root</groupname>
             </mapping>
             <mapping>
+              <directory>/usr/libexec/device/services/mail/list</directory>
+              <directoryIncluded>false</directoryIncluded>
+              <filemode>755</filemode>
+              <username>root</username>
+              <groupname>root</groupname>
+              <sources>
+                <source>
+                  <location>target/classes/usr/libexec/device/services/mail/list/subscribe</location>
+                </source>
+                <source>
+                  <location>target/classes/usr/libexec/device/services/mail/list/unsubscribe</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
               <directory>/usr/libexec/device/services/mail/list/instance</directory>
               <directoryIncluded>true</directoryIncluded>
               <filemode>755</filemode>
@@ -200,12 +215,6 @@
                 </source>
                 <source>
                   <location>target/classes/usr/libexec/device/services/mail/list/instance/set</location>
-                </source>
-                <source>
-                  <location>target/classes/usr/libexec/device/services/mail/list/instance/subscribe</location>
-                </source>
-                <source>
-                  <location>target/classes/usr/libexec/device/services/mail/list/instance/unsubscribe</location>
                 </source>
               </sources>
             </mapping>
