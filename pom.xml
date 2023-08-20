@@ -8,7 +8,7 @@
 
   <artifactId>device-mlmmj</artifactId>
   <groupId>zone.device.platform</groupId>
-  <version>0.9.0</version>
+  <version>0.9.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>device mlmmj package</name>
   <description>Packaging for the mlmmj appliance</description>
@@ -20,9 +20,9 @@
   </organization>
 
   <scm>
-    <connection>scm:svn:https://github.com/device-zone/device-mlmmj/tags/device-mlmmj-0.9.0</connection>
-    <developerConnection>scm:svn:https://github.com/device-zone/device-mlmmj/tags/device-mlmmj-0.9.0</developerConnection>
-    <url>https://github.com/device-zone/device-mlmmj/tags/device-mlmmj-0.9.0</url>
+    <connection>scm:svn:https://github.com/device-zone/device-mlmmj/trunk</connection>
+    <developerConnection>scm:svn:https://github.com/device-zone/device-mlmmj/trunk</developerConnection>
+    <url>https://github.com/device-zone/device-mlmmj/trunk</url>
   </scm>
 
   <modules>
