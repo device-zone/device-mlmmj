@@ -3,7 +3,7 @@
 set -e
 umask 0002
 
-OPTIONS="--add name --text name --text prefix --text footer --required --text owner --relation-base /etc/device/services/mail/list/profile --relation-name name --relation-suffix .txt --relation profile"
+OPTIONS="--add name --address-maximum 255 --address-filesafe yes --address-addrspec name --text prefix --text footer --required --address-addrspec owner --relation-base /etc/device/services/mail/list/profile --relation-name name --relation-suffix .txt --relation profile"
 
 if [ "$1" == "--" ]; then
 
