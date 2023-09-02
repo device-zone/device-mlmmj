@@ -216,6 +216,9 @@
                 <source>
                   <location>target/classes/usr/libexec/device/services/mail/list/instance/set</location>
                 </source>
+                <source>
+                  <location>target/classes/usr/libexec/device/services/mail/list/instance/show</location>
+                </source>
               </sources>
             </mapping>
             <mapping>
@@ -233,6 +236,9 @@
                 </source>
                 <source>
                   <location>target/classes/usr/libexec/device/services/mail/list/profile/set</location>
+                </source>
+                <source>
+                  <location>target/classes/usr/libexec/device/services/mail/list/profile/show</location>
                 </source>
               </sources>
             </mapping>

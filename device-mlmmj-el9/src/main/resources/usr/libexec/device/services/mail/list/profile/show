@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+umask 0002
+
+OPTIONS="--show name --hostname name --show-table name,subscribe,post,get --required --select-base /usr/libexec/device/services/mail/list/profile/subscribe.txt --select subscribe --select-base /usr/libexec/device/services/mail/list/profile/post.txt --select post --select-base /usr/libexec/device/services/mail/list/profile/get.txt --select get"
+
+if [ "$1" == "--" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+elif [ "$1" == "-c" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+fi
+

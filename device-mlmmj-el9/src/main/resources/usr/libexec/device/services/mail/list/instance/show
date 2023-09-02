@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+umask 0002
+
+OPTIONS="--show name --show-table name,prefix,owner,profile --address-maximum 255 --address-filesafe yes --address-addrspec name --text prefix --text footer --required --address-addrspec owner --relation-base /etc/device/services/mail/list/profile --relation-name name --relation-suffix .txt --relation profile"
+
+if [ "$1" == "--" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+elif [ "$1" == "-c" ]; then
+
+  /usr/libexec/device-set ${OPTIONS} "$@"
+
+fi
+
