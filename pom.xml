@@ -20,9 +20,9 @@
   </organization>
 
   <scm>
-    <connection>scm:svn:https://github.com/device-zone/device-mlmmj/trunk</connection>
-    <developerConnection>scm:svn:https://github.com/device-zone/device-mlmmj/trunk</developerConnection>
-    <url>https://github.com/device-zone/device-mlmmj/trunk</url>
+    <connection>scm:git:https://github.com/device-zone/device-mlmmj.git</connection>
+    <developerConnection>scm:git:https://github.com/device-zone/device-mlmmj.git</developerConnection>
+    <url>https://github.com/device-zone/device-mlmmj</url>
   </scm>
 
   <modules>
