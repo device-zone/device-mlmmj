@@ -184,6 +184,9 @@
                 <source>
                   <location>target/classes/usr/libexec/device/services/mail/list/unsubscribe</location>
                 </source>
+                <source>
+                  <location>target/classes/usr/libexec/device/services/mail/list/show-subscribers</location>
+                </source>
               </sources>
             </mapping>
             <mapping>
