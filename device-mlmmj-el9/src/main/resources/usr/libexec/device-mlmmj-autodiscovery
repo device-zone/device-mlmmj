@@ -145,6 +145,33 @@ update_instance() {
     rm -f "${listdir}/control/subonlyget"
   fi
 
+  touch "${listdir}/control/replyto"
+
+  cat > "${listdir}/control/delheaders" <<- EOF
+From:
+DKIM-Signature:
+X-Google-DKIM-Signature:
+X-Gm-Message-State:
+X-Google-Smtp-Source:
+Authentication-Results:
+ARC-Seal:
+ARC-Message-Signature:
+ARC-Authentication-Results:
+EOF
+
+  localpart=$(echo "${list}" | cut -d @ -f 1)
+  domain=$(echo "${list}" | cut -d @ -f 2)
+
+  cat > "${listdir}/control/customheaders" <<- EOF
+Precedence: bulk
+From: ${list}
+X-Mailing-List: ${list}
+List-Id: <${list}>
+List-Post: <mailto:${list}>
+List-Subscribe: <mailto:${localpart}+subscribe@${domain}?subject=Subscribe>
+List-Unsubscribe: <mailto:${localpart}+unsubscribe@${domain}?subject=Unsubscribe>
+EOF
+
 }
 
 
