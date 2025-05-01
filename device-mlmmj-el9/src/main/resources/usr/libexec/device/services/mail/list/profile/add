@@ -3,7 +3,11 @@
 set -e
 umask 0002
 
-OPTIONS="--add name --hostname name --required --select-base /usr/libexec/device/services/mail/list/profile/subscribe.txt --select subscribe --select-base /usr/libexec/device/services/mail/list/profile/post.txt --select post --select-base /usr/libexec/device/services/mail/list/profile/get.txt --select get"
+OPTIONS="--add name --hostname name \
+         --polar optional-tocc \
+         --required --select-base /usr/libexec/device/services/mail/list/profile/subscribe.txt --select subscribe \
+         --select-base /usr/libexec/device/services/mail/list/profile/post.txt --select post \
+         --select-base /usr/libexec/device/services/mail/list/profile/get.txt --select get"
 
 if [ "$1" == "--" ]; then
 

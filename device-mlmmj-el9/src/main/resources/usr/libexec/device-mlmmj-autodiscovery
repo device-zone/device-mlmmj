@@ -85,6 +85,12 @@ update_instance() {
     rm -f "${listdir}/control/footer"
   fi
 
+  if test -e "$line/profile.d/optional-tocc.bin"; then
+    touch "${listdir}/control/tocc"
+  else
+    rm -f "${listdir}/control/tocc"
+  fi
+
   if test -e "$line/profile.d/subscribe.txt"; then
     subscribe=$(head -n 1 "${line}/profile.d/subscribe.txt")
     if test "${subscribe}" = "open"; then
