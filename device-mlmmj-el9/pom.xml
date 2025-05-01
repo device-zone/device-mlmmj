@@ -278,6 +278,7 @@
           </preremoveScriptlet>
           <requires>
             <require>mlmmj</require>
+            <require>mlmmj-selinux</require>
             <require>device</require>
           </requires>
         </configuration>
